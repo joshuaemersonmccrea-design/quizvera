@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quizvera | Daily Trivia</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #111;
+        color: #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    #game {
+        text-align: center;
+        max-width: 520px;
+        padding: 20px;
+    }
+
+    input {
+        width: 85%;
+        padding: 12px;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    button {
+        padding: 12px 24px;
+        margin-top: 15px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #progress {
+        margin-top: 10px;
+        color: #888;
+        font-size: 14px;
+    }
+
+    #status {
+        margin-top: 10px;
+        color: #aaa;
+        font-style: italic;
+    }
+
+    footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #666;
+    }
+
+    /* Fullscreen video overlay */
+    #overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: black;
+        z-index: 9999;
+    }
+
+    video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+</head>
+<body>
+
+<div id="game">
+    <h1>Quizvera</h1>
+    <p style="color:#aaa;">Daily Trivia • 20 Questions</p>
+
+    <p id="question"></p>
+
+    <input id="answer" placeholder="Enter your answer">
+    <br>
+
+    <button id="submitBtn">Submit Answer</button>
+
+    <p id="progress"></p>
+    <p id="status"></p>
+
+    <footer>
+        © 2026 Quizvera • Practice quiz
+    </footer>
+</div>
+
+<div id="overlay">
+    <video id="video" src="media/intro.mp4" autoplay loop></video>
+</div>
+
+<script>
+const questions = [
+    { q: "What is the capital city of Australia?", a: ["canberra"] },
+    { q: "Which element has the chemical symbol Fe?", a: ["iron"] },
+    { q: "Who wrote 'Romeo and Juliet'?", a: ["william shakespeare", "shakespeare"] },
+    { q: "What is the largest planet in our solar system?", a: ["jupiter"] },
+    { q: "How many bones are in the adult human body?", a: ["206"] },
+    { q: "Which ocean lies between Africa and Australia?", a: ["indian", "indian ocean"] },
+    { q: "What year did World War II end?", a: ["1945"] },
+    { q: "What is the square root of 144?", a: ["12", "twelve"] },
+    { q: "Which gas makes up most of Earth’s atmosphere?", a: ["nitrogen"] },
+    { q: "Who was the first U.S. president?", a: ["george washington", "washington"] },
+    { q: "What is the hardest natural substance?", a: ["diamond"] },
+    { q: "Which country has the Great Barrier Reef?", a: ["australia"] },
+    { q: "What is the chemical formula for water?", a: ["h2o"] },
+    { q: "Which continent is the Sahara Desert on?", a: ["africa"] },
+    { q: "Which planet has the most moons?", a: ["saturn"] },
+    { q: "In what year did the Titanic sink?", a: ["1912"] },
+    { q: "What instrument measures air pressure?", a: ["barometer"] },
+    { q: "Which language has the most native speakers?", a: ["mandarin", "mandarin chinese"] },
+    { q: "Who painted the Mona Lisa?", a: ["leonardo da vinci", "da vinci"] },
+    { q: "What is the smallest prime number?", a: ["2", "two"] }
+];
+
+let current = 0;
+
+const questionEl = document.getElementById("question");
+const answerEl = document.getElementById("answer");
+const statusEl = document.getElementById("status");
+const submitBtn = document.getElementById("submitBtn");
+const progressEl = document.getElementById("progress");
+
+function loadQuestion() {
+    questionEl.textContent = questions[current].q;
+    answerEl.value = "";
+    statusEl.textContent = "";
+    submitBtn.disabled = false;
+    progressEl.textContent = `Question ${current + 1} of ${questions.length}`;
+}
+
+submitBtn.onclick = () => {
+    const answer = answerEl.value.trim().toLowerCase();
+    const correct = questions[current].a.includes(answer);
+
+    submitBtn.disabled = true;
+
+    if (!correct) {
+        statusEl.textContent = "Validating answer…";
+        setTimeout(showVideo, 1500);
+        return;
+    }
+
+    current++;
+    if (current >= questions.length) {
+        alert("Thanks for playing! New quiz available tomorrow.");
+        return;
+    }
+
+    loadQuestion();
+};
+
+function showVideo() {
+    const overlay = document.getElementById("overlay");
+    const video = document.getElementById("video");
+
+    overlay.style.display = "block";
+
+    if (video.requestFullscreen) {
+        video.requestFullscreen();
+    }
+
+    video.volume = 1;
+    video.play();
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
